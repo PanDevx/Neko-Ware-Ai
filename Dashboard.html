@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crotolandia Dashboard</title>
+  <style>
+    /* Estilos Generales */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #2C3E50; /* Fondo oscuro (gris oscuro) */
+      color: white;
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Barra lateral */
+    .sidebar {
+      width: 250px;
+      background-color: #2980b9; /* Azul vibrante */
+      padding-top: 20px;
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #f1c40f; /* Amarillo luminoso */
+      text-shadow: 0 0 10px rgba(241, 196, 15, 1), 0 0 20px rgba(241, 196, 15, 0.8); /* Efecto brillante */
+      animation: glow 1.5s ease-in-out infinite alternate; /* Animación brillante */
+    }
+
+    @keyframes glow {
+      0% { text-shadow: 0 0 10px rgba(241, 196, 15, 1), 0 0 20px rgba(241, 196, 15, 0.8); }
+      50% { text-shadow: 0 0 20px rgba(241, 196, 15, 1), 0 0 30px rgba(241, 196, 15, 0.8); }
+      100% { text-shadow: 0 0 10px rgba(241, 196, 15, 1), 0 0 20px rgba(241, 196, 15, 0.8); }
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: white;
+      padding: 10px 20px;
+      font-size: 18px;
+      text-align: left;
+      border-radius: 8px;
+      margin: 10px 0;
+      display: block;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .sidebar a:hover {
+      background-color: #3498db; /* Azul más brillante al hacer hover */
+      transform: scale(1.05); /* Efecto de aumento al pasar el mouse */
+    }
+
+    /* Línea de separación entre opciones */
+    .sidebar hr {
+      margin-top: 20px;
+      border: 1px solid #3498db;
+    }
+
+    /* Contenido principal */
+    .main-content {
+      margin-left: 250px;
+      padding: 30px;
+      width: 100%;
+      height: 100vh;
+      transition: all 0.3s ease;
+      overflow-y: auto;
+    }
+
+    /* Titulo principal */
+    .header {
+      background-color: #2ecc71; /* Verde claro */
+      padding: 20px;
+      color: white;
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+    }
+
+    /* Sección activa */
+    .active-section {
+      display: block;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .inactive-section {
+      display: none;
+    }
+
+    /* Animación de desvanecimiento */
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* Secciones dentro de la vista */
+    .section {
+      background: #34495e; /* Gris oscuro para las secciones */
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+    }
+
+    /* Estilos para el formulario de mensajes */
+    .message-area, .profile-edit {
+      height: 300px;
+      width: 100%;
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    .message-area input, .message-area textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      font-size: 16px;
+      border: 2px solid #3498db;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .message-area textarea {
+      height: 150px;
+      resize: none;
+    }
+
+    .message-area button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .message-area button:hover {
+      background-color: #2980b9;
+    }
+
+    /* Estilo de perfil */
+    .profile-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+
+    .profile-container img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+
+    .profile-container input, .profile-container textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+      border: 2px solid #3498db;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .profile-container button {
+      padding: 12px 20px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .profile-container button:hover {
+      background-color: #2980b9;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Barra lateral -->
+  <div class="sidebar">
+    <h1>Crotolandia</h1>
+    <a href="#" id="generalLink">General</a>
+    <a href="#" id="perfilLink">Perfil</a>
+    <a href="#" id="gamesLink">Games</a>
+    <a href="#" id="supportLink">Support</a>
+    <hr>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <div class="header">
+      Crotolandia Dashboard
+    </div>
+
+    <!-- Sección General -->
+    <div id="generalSection" class="section inactive-section">
+      <h2>Mensajes de la Comunidad</h2>
+      <div class="message-area">
+        <textarea placeholder="Escribe un mensaje..."></textarea>
+        <input type="file" id="imageInput" accept="image/*" placeholder="Sube una foto">
+        <button onclick="submitMessage()">Enviar Mensaje</button>
+      </div>
+      <div id="messageList"></div>
+    </div>
+
+    <!-- Sección Perfil -->
+    <div id="perfilSection" class="section inactive-section">
+      <h2>Cambiar Perfil</h2>
+      <div class="profile-container">
+        <img id="profileImage" src="https://via.placeholder.com/120" alt="Foto de perfil">
+        <input type="file" id="profileImageInput">
+        <input type="text" id="username" placeholder="Nuevo Nombre de Usuario">
+        <input type="text" id="fullName" placeholder="Nombre Completo">
+        <textarea id="bio" placeholder="Descripción"></textarea>
+        <button onclick="saveProfile()">Guardar Cambios</button>
+      </div>
+    </div>
+
+    <!-- Sección Juegos -->
+    <div id="gamesSection" class="section inactive-section">
+      <h2>Juegos Básicos</h2>
+      <div class="games-container">
+        <div class="game">Juego 1</div>
+        <div class="game">Juego 2</div>
+        <div class="game">Juego 3</div>
+      </div>
+    </div>
+
+    <!-- Sección Support -->
+    <div id="supportSection" class="section inactive-section">
+      <h2>Quejas y Sugerencias</h2>
+      <textarea placeholder="Escribe tu queja o sugerencia aquí..."></textarea>
+      <button>Enviar Queja</button>
+    </div>
+  </div>
+
+  <script>
+    // Función para mostrar la sección correspondiente
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => {
+        section.classList.add('inactive-section');
+      });
+      document.getElementById(sectionId).classList.remove('inactive-section');
+    }
+
+    // Eventos de clic en los enlaces de la barra lateral
+    document.getElementById('generalLink').addEventListener('click', function() {
+      showSection('generalSection');
+    });
+
+    document.getElementById('perfilLink').addEventListener('click', function() {
+      showSection('perfilSection');
+    });
+
+    document.getElementById('gamesLink').addEventListener('click', function() {
+      showSection('gamesSection');
+    });
+
+    document.getElementById('supportLink').addEventListener('click', function() {
+      showSection('supportSection');
+    });
+
+
+    // Función para enviar mensaje y foto en "General"
+    function submitMessage() {
+      const message = document.querySelector('#generalSection textarea').value;
+      const image = document.querySelector('#imageInput').files[0];
+      
+      if (message || image) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message-item');
+        
+        const messageText = document.createElement('p');
+        messageText.textContent = message;
+        
+        const messageImage = image ? URL.createObjectURL(image) : null;
+        if (messageImage) {
+          const imgElement = document.createElement('img');
+          imgElement.src = messageImage;
+          imgElement.style.maxWidth = '200px';
+          messageDiv.appendChild(imgElement);
+        }
+
+        messageDiv.appendChild(messageText);
+        document.getElementById('messageList').appendChild(messageDiv);
+        
+        // Limpiar el campo de entrada
+        document.querySelector('#generalSection textarea').value = '';
+        document.querySelector('#imageInput').value = '';
+      } else {
+        alert('Por favor, ingresa un mensaje o una foto.');
+      }
+    }
+
+    // Función para guardar los cambios del perfil
+    function saveProfile() {
+      const username = document.getElementById('username').value;
+      const fullName = document.getElementById('fullName').value;
+      const bio = document.getElementById('bio').value;
+      const profileImageInput = document.getElementById('profileImageInput').files[0];
+      
+      if (profileImageInput) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profileImage').src = e.target.result;
+        };
+        reader.readAsDataURL(profileImageInput);
+      }
+
+      alert(`Perfil actualizado:\nUsuario: ${username}\nNombre: ${fullName}\nBio: ${bio}`);
+    }
+  </script>
+
+</body>
+</html>
